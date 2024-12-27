@@ -12,3 +12,11 @@
 .node-start {
     background-color: green;
 }
+
+.node-visited {
+    background-color: blue;
+}
+
+.node-wall {
+    background-color: grey;
+}
