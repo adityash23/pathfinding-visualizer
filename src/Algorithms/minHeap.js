@@ -3,6 +3,10 @@ export class NodesMinHeap {
     this.heap = [];
   }
 
+  print() {
+    return this.heap;
+  }
+
   // get the index of the parent node
   parent(index) {
     return Math.floor((index - 1) / 2);
@@ -49,6 +53,7 @@ export class NodesMinHeap {
   }
 
   heapifyDown(index) {
+    console.log("hDown called");
     let smallest = index;
     const left = this.leftChild(index);
     const right = this.rightChild(index);

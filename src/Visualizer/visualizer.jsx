@@ -77,7 +77,7 @@ export default class Visualizer extends React.Component {
             setTimeout(() => {
                 const node = nodesShortestPath[i];
                 document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-path'; 
-            }, 10 * i);
+            }, 20 * i);
         }
     }
 
@@ -86,6 +86,7 @@ export default class Visualizer extends React.Component {
         const startNode = grid[START_ROW][START_COL];
         const endNode = grid[END_ROW][END_COL];
         const visitedNodesInOrder = dijkstra(grid, startNode, endNode);
+        console.log(visitedNodesInOrder);
         const nodesShortestPath = getNodesShortestPath(endNode);
         this.animateDjikstra(visitedNodesInOrder, nodesShortestPath);
     }

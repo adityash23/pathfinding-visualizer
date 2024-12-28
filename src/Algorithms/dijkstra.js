@@ -6,14 +6,24 @@ export function dijkstra(grid, startNode, endNode) {
   startNode.distance = 0;
 
   const unvisitedNodes = getAllNodes(grid); // univisited nodes in a Min Heap
+  const arr1 = unvisitedNodes.print();
 
   while (unvisitedNodes.size() > 0) {
     console.log(unvisitedNodes.size());
     const closestNode = unvisitedNodes.extractMin(); // closest node is min value in heap
 
+    const arr2 = unvisitedNodes.print();
+
+    //console.log(arr1 === arr2);
+
+    console.log(closestNode);
+
     if (closestNode.isWall) continue; // skip a wall
 
-    if (closestNode.distance === Infinity) return visitedNodesInOrder; // no shortest path exists
+    if (closestNode.distance === Infinity) {
+      console.log("end bc dist infinity");
+      return visitedNodesInOrder;
+    } // no shortest path exists
     // practical scenario - walls surrounding the startNode in all directions
 
     closestNode.isVisited = true;
@@ -21,6 +31,14 @@ export function dijkstra(grid, startNode, endNode) {
 
     if (closestNode === endNode) return visitedNodesInOrder;
     updateUnivisitedNeighbors(closestNode, grid);
+    unvisitedNodes.heapifyDown(0);
+
+    const arr3 = unvisitedNodes.print();
+
+    console.log("check if heapifying worked or not");
+    console.log(arr2);
+    console.log(arr3);
+    console.log(arr3 === arr2);
   }
 }
 
