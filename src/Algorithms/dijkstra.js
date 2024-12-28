@@ -8,12 +8,13 @@ export function dijkstra(grid, startNode, endNode) {
   const unvisitedNodes = getAllNodes(grid); // univisited nodes in a Min Heap
 
   while (unvisitedNodes.size() > 0) {
+    console.log(unvisitedNodes.size());
     const closestNode = unvisitedNodes.extractMin(); // closest node is min value in heap
 
     if (closestNode.isWall) continue; // skip a wall
 
     if (closestNode.distance === Infinity) return visitedNodesInOrder; // no shortest path exists
-    // practical scenario - walls surrounding the startNode in all directionsf
+    // practical scenario - walls surrounding the startNode in all directions
 
     closestNode.isVisited = true;
     visitedNodesInOrder.push(closestNode);
@@ -52,4 +53,16 @@ function getUnivisitedNeighbors(node, grid) {
   if (col > 0) neighbors.push(grid[row][col - 1]);
   if (col < grid[0].length - 1) neighbors.push(grid[row][col + 1]);
   return neighbors.filter((neighbor) => !neighbor.isVisited);
+}
+
+export function getNodesShortestPath(endNode) {
+  const nodeShortestPath = [];
+  let currentNode = endNode;
+
+  while (currentNode !== null) {
+    nodeShortestPath.unshift(currentNode);
+    currentNode = currentNode.previousNode;
+  }
+
+  return nodeShortestPath;
 }

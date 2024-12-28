@@ -2,14 +2,14 @@ import React from "react";
 import Node from "./Node/node";
 
 import './visualizer.css';
-import { dijkstra } from "../Algorithms/dijkstra";
+import { dijkstra, getNodesShortestPath } from "../Algorithms/dijkstra";
 
 const ROWS = 15;
 const COLS = 48; 
 const START_COL = 5;
 const START_ROW = 10;
 const END_ROW = 10;
-const END_COL = 45;
+const END_COL = 20;
 
 export default class Visualizer extends React.Component {
     constructor (props) {
@@ -40,10 +40,22 @@ export default class Visualizer extends React.Component {
         this.setState({mousePressed : false});
     }
 
-    animateDjikstra(visitedNodesInOrder) {
-        for (let i = 0; i < visitedNodesInOrder.length; i++) {
+    animateDjikstra(visitedNodesInOrder, nodesShortestPath) {
+        for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+            // visited all nodes to be visited -> do shortest path animation
+            if (i === visitedNodesInOrder.length) {
+                setTimeout(() => {
+                    this.animateShortestPath(nodesShortestPath);
+                }, 10 * i);
+                return;
+            }
+            
+            // still visiting the nodes
             setTimeout(() => {
                 const node = visitedNodesInOrder[i];
+
+                // re-rendering the whole grid - lag issues
+                /*
                 const newGrid = this.state.grid.slice();
                 const newNode = {
                     ...node, 
@@ -51,11 +63,21 @@ export default class Visualizer extends React.Component {
                 };
 
                 newGrid[node.row][node.col] = newNode;
-                // this.setState({grid : newGrid}); // re-rendering the whole grid - lag issues
+                this.setState({grid : newGrid}); 
+                */
 
                 // directly changing class name instead of re-render
                 document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-visited'; 
-            }, 20 * i);
+            }, 10 * i);
+        }
+    }
+
+    animateShortestPath(nodesShortestPath) {
+        for (let i = 0; i < nodesShortestPath.length; i++) {
+            setTimeout(() => {
+                const node = nodesShortestPath[i];
+                document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-path'; 
+            }, 10 * i);
         }
     }
 
@@ -64,28 +86,9 @@ export default class Visualizer extends React.Component {
         const startNode = grid[START_ROW][START_COL];
         const endNode = grid[END_ROW][END_COL];
         const visitedNodesInOrder = dijkstra(grid, startNode, endNode);
-        this.animateDjikstra(visitedNodesInOrder);
+        const nodesShortestPath = getNodesShortestPath(endNode);
+        this.animateDjikstra(visitedNodesInOrder, nodesShortestPath);
     }
-
-
-/*    componentDidMount() {
-        const nodes = [];
-        for (let row = 0; row < ROWS; row++){
-            const currentRow = [];
-            for (let col = 0; col < COLS; col++){
-                const currentNode = {
-                    col, 
-                    row, 
-                    isStart : row === 10 && col === 5,
-                    isFinish : row === 10 && col === 45,
-                };
-                currentRow.push(currentNode);
-            }
-            nodes.push(currentRow);
-        }
-        this.setState({nodes});
-    }
-*/
 
     render () {
         const {grid, mousePressed} = this.state;
